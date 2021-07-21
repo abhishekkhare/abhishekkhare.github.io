@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Narrative Visualization-CS489</title>
+
+    <script type="text/javascript" src="Narrative_visualization.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v5.js"></script>
+    <style>
+        .top_level_window {
+            color: #373c40;
+            text-align: center;
+            width: 100%;
+            font-weight: bold;
+            margin: auto;
+            font-size: 23px;
+            padding: 0px;
+            border-style: solid;
+            border-bottom-width: 1px;
+            border-width: 0px 0px 1px 0px;
+            padding-bottom: 10px;
+        }
+
+        .main_window {
+            width: 1250px;
+            margin-right: auto;
+            margin-left: auto;
+            padding-right: 13px;
+            padding-left: 13px;
+        }
+
+        .scene_box {
+            width: 100%;
+            display: inline-block;
+        }
+
+        .left_navigation {
+            width: 9%;
+            float: left;
+            padding-top: 220px;
+        }
+
+        .graph_box {
+            width: 80%;
+            float: left;
+            height: 500px;
+            border-style: solid;
+            border-width: 1px;
+            padding: 5px;
+            border-color: #dae0e5;
+            float: left;
+            margin-top: 15px;
+        }
+
+        .right_navigation {
+            width: 9%;
+            float: left;
+            padding-top: 220px;
+            text-align: center
+        }
+
+        .blue {
+            background-color: blue;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        .btn-primary {
+            color: #fff;
+
+        }
+    </style>
+</head>
+<body onload="init()">
+<div class="main_window">
+    <div class="top_level_window">
+        How World GDP per Capita and Mortality changes over time
+    </div>
+    <div class="scene_box">
+        <div class="left_navigation">
+            <button type="button" class="btn btn-primary blue"><a >Previous</a>
+            </button>
+        </div>
+        <div class="graph_box">
+            <div id="chartBoxId">
+                <svg>
+                    <div>
+                        <h3>Grpah will come here</h3>
+                    </div>
+                </svg>
+            </div>
+        </div>
+        <div id="next" class="right_navigation">
+            <button type="button" class="btn btn-primary    blue"><a >Next</a></button>
+        </div>
+    </div>
+    <div>
+        <hr/>
+    </div>
+</div>
+</body>
+</html>
