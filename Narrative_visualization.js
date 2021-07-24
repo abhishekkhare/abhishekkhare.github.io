@@ -107,6 +107,13 @@ function showScene(dataSet) {
         .style("font-weight", "bold")
         .text(graphTitle);
     
+    var tooltip = d3.select("#chartBoxId")
+        .append("div")
+        .style("position", "absolute")
+        .attr("class", "tooltip")
+
+        .style("visibility", "hidden");
+    
     svg.selectAll(".dot")
         .data(dataSet.filter(line.defined()))
         .enter().append("circle")
@@ -116,7 +123,20 @@ function showScene(dataSet) {
         })
         .attr("cy", function (d) {
             return yScale(d.Value)
-        }).attr("r", 5);
+        }).attr("r", 5)
+        .on("mousemove", function (d) {
+            hoverTextValue = d.Value;
+            return tooltip.style("top", (event.pageY-50) + "px").
+            style("left", (event.pageX) + "px").
+            html("<div class='hoverText'>" +d.HoverText+ ':' + hoverTextValue+ "</div>" +
+                "<div class='hoverText'>" +"Year :"+ d.Year +"</div>");
+        })
+        .on("mouseout", function () {
+            return tooltip.style("visibility", "hidden");
+        })
+        .on("mouseover", function () {
+            return tooltip.style("visibility", "visible");
+        });
 }
 
 function moveToScene(direction) {
@@ -137,7 +157,7 @@ function moveToScene(direction) {
         else if (sceneIndex == 1) {
             showScene(sceneData[1])
         }else if (sceneIndex == -1) {
-            window.location.href = 'file:///Users/ak670612/Downloads/Project/Code/AKVisualNarration.html'
+            window.location.href = 'https://abhishekkhare.github.io/AKVisualNarration.html'
         }
     }
 }
