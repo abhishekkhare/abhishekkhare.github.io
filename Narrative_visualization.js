@@ -1,6 +1,7 @@
 sceneData = []
 sceneData.push([])
 sceneData.push([])
+sceneIndex = 0
 
 /*
 Load the CSV data and process it.
@@ -12,6 +13,7 @@ async function init() {
     mortalityData = await d3.csv("https://abhishekkhare.github.io/Mortality_rate.csv")
     console.log(mortalityData);
     processDataSet(mortalityData, 1)//Page 2
+    sceneIndex = 0
     showScene(sceneData[0])
 }
 
@@ -42,7 +44,15 @@ function populateHoverText(dataIndex) {
 }
 
 function showScene(dataSet) {
-    graphTitle ="GDP per capita vs Year"
+    if(sceneIndex == 0)
+    {
+        graphTitle ="GDP per capita vs Year"
+    }
+    else
+    {
+        graphTitle ="Mortality vs Year"
+    }
+
 
 	//clear the svg before showing the scene
 	d3.select("#chartBoxId")
@@ -95,6 +105,27 @@ function showScene(dataSet) {
         .style("font-size", "20px")
         .style("font-weight", "bold")
         .text(graphTitle);
+}
 
-    
+function moveToScene(direction) {
+    var x = document.getElementById("next");
+    x.style.display = "block";
+    if (direction == 'Next') {
+        sceneIndex++;
+
+        if (sceneIndex == 1) {
+            console.log(sceneIndex)
+            showScene(sceneData[1])
+        }
+    } else {
+        sceneIndex--;
+        if (sceneIndex == 0) {
+            showScene(sceneData[0])
+        }
+        else if (sceneIndex == 1) {
+            showScene(sceneData[1])
+        }else if (sceneIndex == -1) {
+            window.location.href = 'https://abhishekkhare.github.io/AKVisualNarration.html'
+        }
+    }
 }
