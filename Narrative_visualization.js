@@ -46,10 +46,14 @@ function populateHoverText(dataIndex) {
 function showScene(dataSet) {
     if(sceneIndex == 0)
     {
+        dot_color="dot_orange";
+        line_color = "line_orange";
         graphTitle ="GDP per capita vs Year"
     }
     else
     {
+        dot_color="dot_blue";
+        line_color = "line_blue";
         graphTitle ="Mortality vs Year"
     }
 
@@ -92,10 +96,7 @@ function showScene(dataSet) {
 
     svg.append("path")
         .datum(dataSet)
-        .style("fill", "none")
-        .style("stroke", "#CC0000")
-        .style("stroke-width", "2")
-        .attr("class", line)
+        .attr("class", line_color)
         .attr("d", line);
 
     svg.append("text")
@@ -105,6 +106,17 @@ function showScene(dataSet) {
         .style("font-size", "20px")
         .style("font-weight", "bold")
         .text(graphTitle);
+    
+    svg.selectAll(".dot")
+        .data(dataSet.filter(line.defined()))
+        .enter().append("circle")
+        .attr("class", dot_color)
+        .attr("cx", function (d, i) {
+            return xScale(d.Year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.Value)
+        }).attr("r", 5);
 }
 
 function moveToScene(direction) {
@@ -125,7 +137,7 @@ function moveToScene(direction) {
         else if (sceneIndex == 1) {
             showScene(sceneData[1])
         }else if (sceneIndex == -1) {
-            window.location.href = 'https://abhishekkhare.github.io/AKVisualNarration.html'
+            window.location.href = 'file:///Users/ak670612/Downloads/Project/Code/AKVisualNarration.html'
         }
     }
 }

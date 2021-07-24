@@ -86,8 +86,34 @@
             border-radius: .25rem;
             transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         }
+        
         .btn-primary {
             color: #fff;
+
+        }
+
+        .line_orange {
+            fill: none;
+            stroke: #ffab00;
+            stroke-width: 3;
+        }
+
+        .line_blue {
+            fill: none;
+            stroke: #0004ff;
+            stroke-width: 3;
+        }
+
+
+        .dot_orange {
+            fill: #ffab00;
+            stroke: #fff;
+
+        }
+
+        .dot_blue {
+            fill: #0004ff;
+            stroke: #fff;
 
         }
     </style>
@@ -99,7 +125,7 @@
     </div>
     <div class="scene_box">
         <div class="left_navigation" onclick="moveToScene('Previous')">
-            <button type="button" class="btn btn-primary orange"><a >Previous</a>
+            <button type="button" class="btn btn-primary blue"><a >Previous</a>
             </button>
         </div>
         <div class="graph_box">
@@ -111,7 +137,7 @@
             </div>
         </div>
         <div id="next" class="right_navigation" onclick="moveToScene('Next')">
-            <button type="button" class="btn btn-primary    red"><a >Next</a></button>
+            <button type="button" class="btn btn-primary    blue"><a >Next</a></button>
         </div>
     </div>
     <div>
