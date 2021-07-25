@@ -111,9 +111,9 @@ function showScene(dataSet) {
         .append("div")
         .style("position", "absolute")
         .attr("class", "tooltip")
-
         .style("visibility", "hidden");
-    
+
+
     svg.selectAll(".dot")
         .data(dataSet.filter(line.defined()))
         .enter().append("circle")
@@ -137,6 +137,108 @@ function showScene(dataSet) {
         .on("mouseover", function () {
             return tooltip.style("visibility", "visible");
         });
+
+        showAnnotation(sceneIndex, dataSet, xScale, yScale)
+}
+
+function showAnnotation(sceneIndex, dataSet, xAxis, yAxis) {
+    parent = d3.select("#chartBoxId")
+        .select("svg")
+        .append("g")
+
+    if (sceneIndex == 0) {
+        parent.append("rect")
+            .attr("x", xAxis(2009) - 430)
+            .attr("y", yAxis(17024.25) + 20 )
+            .attr("fill", "lightgrey")
+            .attr("class", "annotationBox")
+
+        parent.append("text")
+            .attr("x", xAxis(2009) - 410)
+            .attr("y", yAxis(17024.25) + 45)
+            .attr("class", "annotationText")
+            .text("GDP Dip due to Great Recession in 2008-2009");
+
+        d3.select("#chartBoxId")
+            .select("svg")
+            .append("g")
+            .append("line")
+            .attr("opacity", 1)
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:0.5px")
+            .attr("x1", margin.left + xAxis(2009) - 310)
+            .attr("y1", yAxis(17024.25) + 70 )
+            .attr("x2", margin.left + xAxis(2009))
+            .attr("y2", yAxis(17024.25) + 130)
+
+        parent.append("rect")
+            .attr("x", xAxis(2020) - 200)
+            .attr("y", yAxis(17109.45142) + 200)
+            .attr("fill", "lightgrey")
+            .attr("class", "annotationBox")
+
+        parent.append("text")
+            .attr("x", xAxis(2020) - 190)
+            .attr("y", yAxis(17109.45142) + 230)
+            .attr("class", "annotationText")
+            .text("GDP Dip due to Covid-19 Pandemic 2020");
+
+        d3.select("#chartBoxId")
+            .select("svg")
+            .append("g")
+            .append("line")
+            .attr("opacity", 1)
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:0.5px")
+            .attr("x1", margin.left + xAxis(2020) - 200)
+            .attr("y1", yAxis(17109.45142) + 200)
+            .attr("x2", margin.left + xAxis(2020))
+            .attr("y2", yAxis(17109.45142) + 25)
+    } else if (sceneIndex == 1) {
+        parent.append("rect")
+            .attr("x", xAxis(2003) - 70)
+            .attr("y", yAxis(28.25))
+            .attr("fill", "lightgrey")
+            .attr("class", "annotationBox")
+
+        parent.append("text")
+            .attr("class", "annotation_text")
+            .attr("x", xAxis(2003) - 30)
+            .attr("y", yAxis(28.25) + 30)
+            .text("Largest Decline in Mortality Rate by 1.8%");
+
+        d3.select("#chartBoxId")
+            .select("svg")
+            .append("g")
+            .append("line")
+            .attr("opacity", 1)
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:0.5px")
+            .attr("x1", margin.left + xAxis(2003))
+            .attr("y1", yAxis(28.9) - 100)
+            .attr("x2", margin.left + xAxis(2003))
+            .attr("y2", yAxis(28.9) + 10)
+
+        parent.append("rect")
+            .attr("x", xAxis(2020) - 280)
+            .attr("y", yAxis(29.046) - 180)
+            .attr("fill", "lightgrey")
+            .attr("class", "annotationBox")
+
+        parent.append("text")
+            .attr("class", "annotation_text")
+            .attr("x", xAxis(2020) - 270)
+            .attr("y", yAxis(29.046) - 150)
+            .text("Mortality Rate increased due to Covid-19 Pandemic");
+
+        d3.select("#chartBoxId")
+            .select("svg")
+            .append("g")
+            .append("line")
+            .attr("opacity", 1)
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:0.5px")
+            .attr("x1", margin.left + xAxis(2020)-100)
+            .attr("y1", yAxis(29.046) - 130)
+            .attr("x2", margin.left + xAxis(2020))
+            .attr("y2", yAxis(29.046) + 20)
+    }
 }
 
 function moveToScene(direction) {
@@ -157,7 +259,7 @@ function moveToScene(direction) {
         else if (sceneIndex == 1) {
             showScene(sceneData[1])
         }else if (sceneIndex == -1) {
-            window.location.href = 'https://abhishekkhare.github.io/AKVisualNarration.html'
+            window.location.href = 'file:///Users/ak670612/Downloads/Project/Code/AKVisualNarration.html'
         }
     }
 }
