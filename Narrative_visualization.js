@@ -1,21 +1,27 @@
-sceneData = []
-sceneData.push([])
-sceneData.push([])
-sceneIndex = 0
+sceneIndex = 0;
+countryNameList = [];
+sceneData = [];
+sceneData.push([]);
+sceneData.push([]);
+dataCountryGDpMortality = [];
+dataCountryGDpMortality.push([]);
+dataCountryGDpMortality.push([]);
+hoverIndex = 0;
+selectedText = "";
+
 
 /*
 Load the CSV data and process it.
 */
 async function init() {
     var worldData = await d3.csv("https://abhishekkhare.github.io/World_Data.csv")
-    console.log(worldData);
     processDataSet(worldData, 0)//Page 1
     mortalityData = await d3.csv("https://abhishekkhare.github.io/Mortality_rate.csv")
-    console.log(mortalityData);
     processDataSet(mortalityData, 1)//Page 2
-    sceneIndex = 0
+    hoverIndex = 0
     showScene(sceneData[0])
 }
+
 
 /*
 Process data to create object like:
@@ -33,7 +39,32 @@ function processDataSet(data, dataIndex) {
         })
         count++;
     }
+    processPerCountryData(data, dataIndex)
+    if (dataIndex == 0) {
+        getCountyNameList(data);
+    }
 }
+
+
+function processPerCountryData(data, dataIndex) {
+    var text = populateHoverText(dataIndex)
+    var keys = Object.keys(data[0])
+    var keyCount = 2;
+    while (keyCount < keys.length) {
+        keyDb = []
+        for (count = 0; count < data.length; count++) {
+            var Year = data[count].Year
+            keyDb.push({
+                "Year": Year, 
+                "Value": Number(data[count][keys[keyCount]]), 
+                "HoverText": text
+            })
+        }
+        dataCountryGDpMortality[dataIndex].push(keyDb);
+        keyCount++;
+    }
+}
+
 
 function populateHoverText(dataIndex) {
     if (dataIndex == 1) {
@@ -43,8 +74,39 @@ function populateHoverText(dataIndex) {
     }
 }
 
+function getCountyNameList(data) {
+    var countryList = Object.keys(data[0])
+    for (var c1 = 2; c1 < countryList.length; c1++) {
+        countryNameList.push(countryList[c1])
+    }
+}
+
+
 function showScene(dataSet) {
-    if(sceneIndex == 0)
+    var previous = document.getElementById("previous");
+    var next = document.getElementById("next");
+    var notes = document.getElementById("notes");
+    var commonText = "To get the exact data values, move the mouse over each data point to show tooltip with details"
+    if (sceneIndex == 0) {
+        previous.style.visibility = "hidden";
+        next.style.visibility = "visible";
+        notes.innerHTML = "<b>World GDP per Capita:</b> Notice a sudden dip in world gdp in 2008-2009 due to <i>Great Recession<i/> and another dip in 2020 due to the <i>Covid-19 Pandemic</i>.<br><i>" +commonText +"</i>"
+    }else if(sceneIndex == 1){
+        previous.style.visibility = "visible";
+        next.style.visibility = "visible";
+        notes.innerHTML = "<b>World Mortality rate, infant (per 1,000 live births):</b> Year <i>2002-2003</i> shows the largest decline in mortality rate, however a sharp increase is noticed during 2020 due to the <i>Covid-19 Pandemic</i>.<br><i>" +commonText +"</i>"
+    }else if(sceneIndex == 2){
+        previous.style.visibility = "visible";
+        next.style.visibility = "hidden";
+        if(hoverIndex == 0){
+            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means GDP data for <b>"+selectedText+"</b> for few or all years.<br><i>" +commonText +"</i>"
+        }else{
+            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means Mortality data for <b>"+selectedText+"</b> few all or all years.<br><i>" +commonText +"</i>"
+        }
+        
+    }
+
+    if(hoverIndex == 0)
     {
         dot_color="dot_orange";
         line_color = "line_orange";
@@ -56,14 +118,15 @@ function showScene(dataSet) {
         line_color = "line_blue";
         graphTitle ="Mortality vs Year"
     }
-
-
-	//clear the svg before showing the scene
-	d3.select("#chartBoxId")
+    d3.select("select")
+        .on("change", loadFinalScene);
+    d3.select("#radioButtonId")
+        .on("change", loadFinalScene);
+    d3.select("#chartBoxId")
         .select("svg").selectAll("g").remove();
 
     var xScale = d3.scaleLinear()
-     	.range([0, width])
+        .range([0, width])
         .domain([1990, 2020]);
 
     var yScale = d3.scaleLinear()
@@ -71,13 +134,18 @@ function showScene(dataSet) {
             return d.Value;
         })]).range([height, 0]);
 
+
     var line = d3.line()
+        .defined(function (d) { 
+            return d.Value !== 0; 
+        })
         .x(function (d, i) {
             return xScale(d.Year);
         })
         .y(function (d) {
             return yScale(d.Value);
-        }).curve(d3.curveMonotoneX)
+        })
+        .curve(d3.curveMonotoneX)
 
     var svg = d3.select("#chartBoxId").select("svg")
         .attr("width", width + margin.left + margin.right)
@@ -85,17 +153,17 @@ function showScene(dataSet) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	svg.append("g")
+    svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));//converts number to year
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
 
     svg.append("g")
         .attr("class", "y axis")
         .call(d3.axisLeft(yScale));
 
     svg.append("path")
-        .datum(dataSet)
+        .datum(dataSet.filter(line.defined()))
         .attr("class", line_color)
         .attr("d", line);
 
@@ -106,13 +174,6 @@ function showScene(dataSet) {
         .style("font-size", "20px")
         .style("font-weight", "bold")
         .text(graphTitle);
-    
-    var tooltip = d3.select("#chartBoxId")
-        .append("div")
-        .style("position", "absolute")
-        .attr("class", "tooltip")
-        .style("visibility", "hidden");
-
 
     svg.selectAll(".dot")
         .data(dataSet.filter(line.defined()))
@@ -138,7 +199,32 @@ function showScene(dataSet) {
             return tooltip.style("visibility", "visible");
         });
 
+    svg.append("text")
+        .attr("transform",
+            "translate(" + (width / 2) + " ," +
+            (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .style("font-weight", "bold")
+        .text("Year");
+
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .style("font-weight", "bold")
+        .text(dataSet[hoverIndex].HoverText);
+
+    var tooltip = d3.select("#chartBoxId")
+        .append("div")
+        .style("position", "absolute")
+        .attr("class", "tooltip")
+        .style("visibility", "hidden");
+
+    if (sceneIndex != 2) {
         showAnnotation(sceneIndex, dataSet, xScale, yScale)
+    }
 }
 
 function showAnnotation(sceneIndex, dataSet, xAxis, yAxis) {
@@ -241,25 +327,74 @@ function showAnnotation(sceneIndex, dataSet, xAxis, yAxis) {
     }
 }
 
+function loadDropDown() {
+    var selectTag = d3.select("select");
+    d3.select(".scene3box").style("visibility", "visible");
+    var options = selectTag.selectAll('option')
+        .data(countryNameList);
+    options.enter()
+        .append('option')
+        .attr('value', function (d, i) {
+            return i
+        })
+        .text(function (d) {
+            return d
+        })
+}
+
 function moveToScene(direction) {
-    var x = document.getElementById("next");
-    x.style.display = "block";
     if (direction == 'Next') {
         sceneIndex++;
-
         if (sceneIndex == 1) {
-            console.log(sceneIndex)
+            d3.select(".scene3box")
+                .style("visibility", "hidden")
+            hoverIndex = 1;
             showScene(sceneData[1])
+
+        }
+        else if (sceneIndex == 2) {
+            loadFinalScene()
         }
     } else {
         sceneIndex--;
         if (sceneIndex == 0) {
+            hoverIndex = 0;
             showScene(sceneData[0])
+            d3.select(".scene3box")
+                .style("visibility", "hidden")
         }
         else if (sceneIndex == 1) {
+            hoverIndex = 1;
             showScene(sceneData[1])
-        }else if (sceneIndex == -1) {
-            window.location.href = 'file:///Users/ak670612/Downloads/Project/Code/AKVisualNarration.html'
+            d3.select(".scene3box")
+                .style("visibility", "hidden")
         }
     }
+}
+
+function loadFinalScene() {
+    loadDropDown();
+    var selected = d3.select("#dropDownId").node().value;
+    selectedText = d3.select("#dropDownId option:checked").text();
+    var index = -1;
+    if (document.getElementById("radioButtonId").elements["gdpmortality"].value == '0') {
+        hoverIndex = 0
+        index = 0;
+    } else {
+        hoverIndex = 1
+        index = 1;
+    }
+    data1 = dataCountryGDpMortality[index][selected]
+    showScene(data1)
+}
+
+function getMaxIndex(dataset) {
+    var counter = 1;
+    var max = 0;
+    for (counter; counter < dataset.length; counter++) {
+        if (dataset[max].Value < dataset[counter].Value) {
+            max = counter;
+        }
+    }
+    return max;
 }
