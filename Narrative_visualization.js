@@ -99,9 +99,9 @@ function showScene(dataSet) {
         previous.style.visibility = "visible";
         next.style.visibility = "hidden";
         if(hoverIndex == 0){
-            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means GDP data for <b>"+selectedText+"</b> for few or all years.<br><i>" +commonText +"</i>"
+            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means GDP data for <b>"+selectedText+"</b> for few or all years is not available.<br><i>" +commonText +"</i>"
         }else{
-            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means Mortality data for <b>"+selectedText+"</b> few all or all years.<br><i>" +commonText +"</i>"
+            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means Mortality data for <b>"+selectedText+"</b> few all or all years is not available.<br><i>" +commonText +"</i>"
         }
         
     }
