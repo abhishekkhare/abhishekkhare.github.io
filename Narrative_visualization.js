@@ -81,6 +81,10 @@ function getCountyNameList(data) {
     }
 }
 
+function myFunction(object, index, array) {
+    return object.Value !== 0;
+}
+
 
 function showScene(dataSet) {
     var previous = document.getElementById("previous");
@@ -98,12 +102,20 @@ function showScene(dataSet) {
     }else if(sceneIndex == 2){
         previous.style.visibility = "visible";
         next.style.visibility = "hidden";
-        if(hoverIndex == 0){
-            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means GDP data for <b>"+selectedText+"</b> for few or all years is not available.<br><i>" +commonText +"</i>"
-        }else{
-            notes.innerHTML = "<b>Note:</b> If the line graph is partially or completly missing, it means Mortality data for <b>"+selectedText+"</b> few all or all years is not available.<br><i>" +commonText +"</i>"
+        flag = dataSet.filter(myFunction);
+        if(flag.length == 0){
+            if(hoverIndex == 0){
+                notes.innerHTML = "<p style=\"color:red\"> GDP data for <b>"+selectedText+"</b> is not available </p> @ <a href=\"https://data.worldbank.org/indicator/NY.GDP.PCAP.PP.CD\" target=\"_blank\">GDP per capita, PPP</a>"
+            }else{
+                notes.innerHTML = "<p style=\"color:red\"> Mortality data for <b>"+selectedText+"</b> is not available </p> @ <a href=\"https://data.worldbank.org/indicator/SP.DYN.IMRT.IN\" target=\"_blank\">Mortality rate, infant</a>"
+            }    
+        } else {
+            if(hoverIndex == 0){
+                notes.innerHTML = "GDP data for <b>"+selectedText+"</b> "
+            }else{
+                notes.innerHTML = "Mortality data for <b>"+selectedText+"</b>"
+            }
         }
-        
     }
 
     if(hoverIndex == 0)
