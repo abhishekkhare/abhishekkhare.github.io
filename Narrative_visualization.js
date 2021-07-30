@@ -90,7 +90,7 @@ function showScene(dataSet) {
     var previous = document.getElementById("previous");
     var next = document.getElementById("next");
     var notes = document.getElementById("notes");
-    var commonText = "To get the exact data values, move the mouse over each data point to show tooltip with details"
+    var commonText = "<br> To get the exact data values, move the mouse over each data point to show tooltip with details"
     if (sceneIndex == 0) {
         previous.style.visibility = "hidden";
         next.style.visibility = "visible";
@@ -111,9 +111,9 @@ function showScene(dataSet) {
             }    
         } else {
             if(hoverIndex == 0){
-                notes.innerHTML = "GDP data for <b>"+selectedText+"</b> "
+                notes.innerHTML = "GDP data for <b>"+selectedText+"</b> <br><i>" +commonText +"</i>"
             }else{
-                notes.innerHTML = "Mortality data for <b>"+selectedText+"</b>"
+                notes.innerHTML = "Mortality data for <b>"+selectedText+"</b> <br><i>" +commonText +"</i>"
             }
         }
     }
